@@ -27,16 +27,20 @@ import {
   withDeviceRatio,
   withSize
 } from "react-financial-charts";
+
+// import * as chart from 'react-financial-charts';
 import { initialData } from "data";
 
 const ChartWrapper = styled.div`
   background: white;
   display: flex;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   flex-direction: column; 
-  margin: 2.4% 0% 0% 10%;
-  min-height: 85.4vh;
+  // margin: 2.4% 0% 0% 10%;
+  width: 100%;
+  margin-top: 1%;
+  min-height: 50vh;
 `;
 
 const PriceChart = () => {

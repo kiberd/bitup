@@ -2,17 +2,18 @@ import Grid from "@mui/material/Grid";
 import { PageWrapper } from "lib/style_layout";
 
 // import PriceChart from "../components/PriceChart";
-import  PricePanel from "components/PricePanel";
+import PriceChartContainer from "./PriceChartContainer";
+import PricePanelContainer from "components/PricePanelContainer";
 
 const Dashboard = () => {
 	return (
 		<PageWrapper>
 			<Grid container spacing={2}>
-				<Grid item xs={7}>
-					차트
+				<Grid item xs={8}>
+					<PriceChartContainer/>
 				</Grid>
-				<Grid item xs={5}>
-					<PricePanel />
+				<Grid item xs={4}>
+					<PricePanelContainer />
 				</Grid>
 			</Grid>
 		</PageWrapper>

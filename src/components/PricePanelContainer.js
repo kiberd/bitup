@@ -13,7 +13,7 @@ const PricePanelWrapper = styled.div`
 
 
 
-const PricePanel = () => {
+const PricePanelContainer = () => {
 
     return (
         <PricePanelWrapper>
@@ -25,4 +25,4 @@ const PricePanel = () => {
 
 }
 
-export default PricePanel;
+export default PricePanelContainer;
