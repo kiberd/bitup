@@ -26,33 +26,36 @@ import {
   ZoomButtons,
   withDeviceRatio,
   withSize,
+  LineSeriesProps,
 } from "react-financial-charts";
-
-// import { initialData } from "../../data";
 
 import { initialData } from "../data";
 
-// const ChartWrapper = styled.div`
-//   background: white;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   flex-direction: column;
-//   margin: 2.4% 0% 0% 10%;
-//   min-height: 85.4vh;
-// `;
+interface PriceChartProps {
+  candleData: CandlePriceInfo[];
+}
 
-const PriceChart = () => {
+interface CandlePriceInfo {
+  date: string;
+  open: number;
+  low: number;
+  high: number;
+  close: number;
+  volume: number;
+}
 
-    const [size, setSize] = useState<any>();
+const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
+  const [size, setSize] = useState<any>();
 
   const ScaleProvider =
     discontinuousTimeScaleProviderBuilder().inputDateAccessor(
       (d) => new Date(d.date)
     );
 
-//   const height = 750;
-//   const width = 900;
+  console.log(ScaleProvider);
+
+  //   const height = 750;
+  //   const width = 900;
   const margin = { left: 0, right: 48, top: 0, bottom: 24 };
 
   const ema12 = ema()
@@ -73,14 +76,21 @@ const PriceChart = () => {
 
   const elder = elderRay();
 
-  const calculatedData = elder(ema26(ema12(initialData)));
-  const { data, xScale, xAccessor, displayXAccessor } =
-    ScaleProvider(initialData);
-  const pricesDisplayFormat = format(".2f");
-  const max = xAccessor(data[data.length - 1]);
-  const min = xAccessor(data[Math.max(0, data.length - 100)]);
-  const xExtents = [min, max + 5];
+  const calculatedData = elder(ema26(ema12(candleData)));
 
+  // const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(candleData);
+  const { data, xScale, xAccessor, displayXAccessor } =
+    ScaleProvider(calculatedData);
+
+  // const pricesDisplayFormat = format(".4f");
+  const pricesDisplayFormat = format("d");
+
+  // console.log(data);
+
+  const max = xAccessor(data[data.length - 1]);
+  const min = xAccessor(data[Math.max(0, data.length - 2500)]);
+
+  const xExtents = [min, max + 5];
   const gridHeight = size?.height - margin.top - margin.bottom;
 
   const elderRayHeight = 100;
@@ -102,11 +112,15 @@ const PriceChart = () => {
   };
 
   const candleChartExtents = (data: any) => {
-    return [data.high, data.low];
+    return [data.low, data.high];
   };
 
   const yEdgeIndicator = (data: any) => {
     return data.close;
+  };
+
+  const yAccessor = (data: any) => {
+    return;
   };
 
   const volumeColor = (data: any) => {
@@ -119,18 +133,25 @@ const PriceChart = () => {
     return data.volume;
   };
 
+  const candle = (data: any) => {
+    return {
+      open: data.open,
+      high: data.high,
+      low: data.low,
+      close: data.close,
+    };
+  };
+
   const openCloseColor = (data: any) => {
     return data.close > data.open ? "#26a69a" : "#ef5350";
   };
-
-  
 
   const contanerRef: any = useRef();
 
   useEffect(() => {
     if (contanerRef && contanerRef.current) {
       const sizeObj = {
-        width: contanerRef.current.offsetWidth * 0.9,
+        width: contanerRef.current.offsetWidth * 0.95,
         height: contanerRef.current.offsetHeight * 0.9,
       };
 
@@ -156,9 +177,7 @@ const PriceChart = () => {
           xAccessor={xAccessor}
           xExtents={xExtents}
           zoomAnchor={lastVisibleItemBasedZoomAnchor}
-          
         >
-            
           <Chart
             id={2}
             height={barChartHeight}
@@ -167,11 +186,13 @@ const PriceChart = () => {
           >
             <BarSeries fillStyle={volumeColor} yAccessor={volumeSeries} />
           </Chart>
+
           <Chart id={3} height={chartHeight} yExtents={candleChartExtents}>
             <XAxis showGridLines showTickLabel={false} />
             <YAxis showGridLines tickFormat={pricesDisplayFormat} />
-            <CandlestickSeries />
-            <LineSeries
+            <CandlestickSeries yAccessor={candle} />
+
+            {/* <LineSeries
               yAccessor={ema26.accessor()}
               strokeStyle={ema26.stroke()}
             />
@@ -186,7 +207,7 @@ const PriceChart = () => {
             <CurrentCoordinate
               yAccessor={ema12.accessor()}
               fillStyle={ema12.stroke()}
-            />
+            /> */}
             <MouseCoordinateY
               rectWidth={margin.right}
               displayFormat={pricesDisplayFormat}
@@ -216,11 +237,22 @@ const PriceChart = () => {
                 },
               ]}
             />
+            <XAxis
+              showGridLines
+              gridLinesStrokeStyle="#e0e3eb"
+              showDomain={true}
+            />
+            <MouseCoordinateX displayFormat={timeDisplayFormat} />
+            <MouseCoordinateY
+              rectWidth={margin.right}
+              displayFormat={pricesDisplayFormat}
+            />
 
             <ZoomButtons />
             <OHLCTooltip origin={[8, 16]} />
           </Chart>
-          <Chart
+
+          {/* <Chart
             id={4}
             height={elderRayHeight}
             yExtents={[0, elder.accessor()]}
@@ -248,9 +280,9 @@ const PriceChart = () => {
               }
               origin={[8, 16]}
             />
-          </Chart>
-          <CrossHairCursor />
-          
+          </Chart> */}
+
+          {/* <CrossHairCursor /> */}
         </ChartCanvas>
       ) : null}
     </div>

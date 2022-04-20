@@ -4,50 +4,63 @@ import axios from "axios";
 
 export const getAllMarketInfo = async () => {
   const { data } = await axios.get(
-    // "https://api.upbit.com/v1/candles/minutes",
     "/v1/market/all"
   );
 
   console.log(data);
 
-  return data;
+  // return data;
 };
 
 export const getCandleInfoByMin = async (token: any) => {
-  const config = {
-    headers: { Authorization: token },
-  };
 
-  const { data } = await axios.get(
-    // "https://api.upbit.com/v1/candles/minutes",
-    "v1/market/all",
-    config
-  );
+  console.log(token);
+  
+  const { data } = await axios.get("v1/candles/minutes/1", {
+    headers: { Authorization: token },
+    params: { market: "KRW-BTC", count: 100 },
+  });
+
+  console.log(data);
 
   //   return data.item;
 };
 
-export const getCandleInfoByDay = async (token: any) => {
+export const getCandleInfoByDay = async (token: any, params: any) => {
 
 
   const { data } = await axios.get("v1/candles/days", {
+    // headers: { Authorization: token },
+    params: params,
+  });
+
+  // console.log(data);
+
+  return data;
+};
+
+export const getCandleInfoByWeek = async (token: any) => {
+  
+  const { data } = await axios.get("v1/candles/weeks", {
     headers: { Authorization: token },
     params: { market: "KRW-BTC", count: 1 },
   });
 
   console.log(data);
 
-  // return data.item;
-};
-
-export const getCandleInfoByWeek = async () => {
-  const { data } = await axios.get("v1/candles/weeks");
 
   // return data.item;
 };
 
-export const getCandleInfoByMonth = async () => {
-  const { data } = await axios.get("v1/candles/months");
+export const getCandleInfoByMonth = async (token: any) => {
+  
+  const { data } = await axios.get("v1/candles/months", {
+    headers: { Authorization: token },
+    params: { market: "KRW-BTC", count: 1 },
+  });
+
+  console.log(data);
+
 
   // return data.item;
 };
