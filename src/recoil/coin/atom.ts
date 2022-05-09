@@ -1,5 +1,12 @@
 import { atom } from "recoil";
 
+export const selectedCoin = atom({
+  key: "selectedCoin",
+  default: {
+    name: "KRW-BTC"
+  }
+});
+
 export const coinListState = atom({
   key: "coinListState",
   // default: [],

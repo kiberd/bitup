@@ -33,6 +33,7 @@ import { initialData } from "../data";
 
 interface PriceChartProps {
   candleData: CandlePriceInfo[];
+  onHandleLoadBefore: any
 }
 
 interface CandlePriceInfo {
@@ -44,7 +45,7 @@ interface CandlePriceInfo {
   volume: number;
 }
 
-const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
+const PriceChart: React.FC<PriceChartProps> = ({ candleData, onHandleLoadBefore }) => {
   const [size, setSize] = useState<any>();
 
   const ScaleProvider =
@@ -52,11 +53,9 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
       (d) => new Date(d.date)
     );
 
-  console.log(ScaleProvider);
-
   //   const height = 750;
   //   const width = 900;
-  const margin = { left: 0, right: 48, top: 0, bottom: 24 };
+  const margin = { left: 0, right: 48, top: 0, bottom: -10 };
 
   const ema12 = ema()
     .id(1)
@@ -78,14 +77,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
 
   const calculatedData = elder(ema26(ema12(candleData)));
 
-  // const { data, xScale, xAccessor, displayXAccessor } = ScaleProvider(candleData);
+  
   const { data, xScale, xAccessor, displayXAccessor } =
     ScaleProvider(calculatedData);
 
-  // const pricesDisplayFormat = format(".4f");
   const pricesDisplayFormat = format("d");
 
-  // console.log(data);
 
   const max = xAccessor(data[data.length - 1]);
   const min = xAccessor(data[Math.max(0, data.length - 2500)]);
@@ -119,10 +116,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
     return data.close;
   };
 
-  const yAccessor = (data: any) => {
-    return;
-  };
-
   const volumeColor = (data: any) => {
     return data.close > data.open
       ? "rgba(38, 166, 154, 0.3)"
@@ -146,7 +139,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
     return data.close > data.open ? "#26a69a" : "#ef5350";
   };
 
-  const contanerRef: any = useRef();
+  const contanerRef: any = useRef(null);
 
   useEffect(() => {
     if (contanerRef && contanerRef.current) {
@@ -159,10 +152,14 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
     }
   }, [contanerRef]);
 
+  const handleLoadBefore = () => {
+    onHandleLoadBefore();
+  };
+
   return (
     <div
       ref={contanerRef}
-      className="flex w-full h-5/6 justify-center items-center"
+      className="flex items-center justify-center w-full h-5/6"
     >
       {size ? (
         <ChartCanvas
@@ -171,12 +168,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData }) => {
           width={size.width}
           margin={margin}
           data={data}
-          displayXAccessor={displayXAccessor}
+          // displayXAccessor={displayXAccessor}
           seriesName="Data"
           xScale={xScale}
           xAccessor={xAccessor}
-          xExtents={xExtents}
-          zoomAnchor={lastVisibleItemBasedZoomAnchor}
+          // xExtents={xExtents}
+          // zoomAnchor={lastVisibleItemBasedZoomAnchor}
+          onLoadBefore={handleLoadBefore}
         >
           <Chart
             id={2}

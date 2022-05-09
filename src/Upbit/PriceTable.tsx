@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSort } from "../Hooks";
 
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
-import { coinListState } from "../recoil/coin/atom";
+import { selectedCoin, coinListState } from "../recoil/coin/atom";
 
 interface PriceTableProps {
   data: PriceInfo[] | undefined;
@@ -124,13 +124,17 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
   );
 
   const [coinList, setCoinList] = useRecoilState(coinListState);
+  const [targetCoin, setChartTargetCoin] = useRecoilState(selectedCoin);
 
   const setTargetCoin = useSetRecoilState(coinListState);
 
   const handleCoinClick = (name: string) => {
 	return (event: React.MouseEvent) => {
-		
-		// console.log(name);
+
+    
+    const newChartTargetCoin = {...targetCoin};
+    newChartTargetCoin.name = name;
+    setChartTargetCoin(newChartTargetCoin);
 
 		const obj = {...coinList};
 		obj.selectedCoin = name;
@@ -147,10 +151,10 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
         null
       ) : (
         <table className="w-full text-sm text-left text-gray-500">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0">
+          <thead className="sticky top-0 text-xs text-gray-700 uppercase bg-gray-50">
             <tr className="sticky top-0">
               {columns.map((column, index) => (
-                <th scope="col" className="px-6 py-3 sticky top-0">
+                <th scope="col" className="sticky top-0 px-6 py-3">
                   {column.Header}
                   <span>
                     {orderBy === column.accessor ? (
@@ -163,7 +167,7 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
                           height="1em"
                           width="1em"
                           xmlns="http://www.w3.org/2000/svg"
-                          className="inline ml-2 mb-2 cursor-pointer"
+                          className="inline mb-2 ml-2 cursor-pointer"
                           onClick={createSortHandler(column.accessor)}
                         >
                           <path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path>
@@ -177,7 +181,7 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
                           height="1em"
                           width="1em"
                           xmlns="http://www.w3.org/2000/svg"
-                          className="inline ml-2 mb-2 cursor-pointer"
+                          className="inline mb-2 ml-2 cursor-pointer"
                           onClick={createSortHandler(column.accessor)}
                         >
                           <path d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"></path>
@@ -192,7 +196,7 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
                         height="1em"
                         width="1em"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="inline ml-2 mb-2 cursor-pointer"
+                        className="inline mb-2 ml-2 cursor-pointer"
                         onClick={createSortHandler(column.accessor)}
                       >
                         <path d="M41 288h238c21.4 0 32.1 25.9 17 41L177 448c-9.4 9.4-24.6 9.4-33.9 0L24 329c-15.1-15.1-4.4-41 17-41z"></path>
@@ -225,7 +229,7 @@ const PriceTable: React.FunctionComponent<PriceTableProps> = ({
               </tr>
             ))}
 
-            {sortedRows.length === 0 ? <tr className="flex justify-center items-center">조건에 맞는 코인이 없습니다.</tr> : null}
+            {sortedRows.length === 0 ? <tr className="flex items-center justify-center">조건에 맞는 코인이 없습니다.</tr> : null}
           </tbody>
         </table>
       )}
