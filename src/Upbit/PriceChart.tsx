@@ -77,6 +77,8 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData, onHandleLoadBefore 
 
   const calculatedData = elder(ema26(ema12(candleData)));
 
+  // console.log(calculatedData);
+
   
   const { data, xScale, xAccessor, displayXAccessor } =
     ScaleProvider(calculatedData);

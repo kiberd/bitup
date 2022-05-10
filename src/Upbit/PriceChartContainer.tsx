@@ -37,20 +37,18 @@ interface CandlePriceInfo {
 }
 
 const PriceChartContainer = () => {
+  const [init, setInit] = useState<Boolean>();
+  const [unit, setUnit] = useState(200);
 
   const [candleData, setCandleData] = useState<CandlePriceInfo[]>();
 
   const [targetCoin, setTargetCoin] = useRecoilState(selectedCoin);
 
-  
-
   const [paramsString, setParamsString] = useState(
     'market="KRW-BTC"&count=100'
   );
 
-  
   const [params, setParams] = useState({
-    // market: "KRW-ETH",
     market: targetCoin.name,
     count: 200,
     to: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -58,26 +56,44 @@ const PriceChartContainer = () => {
   const [offset, setOffset] = useState(moment());
 
   const handleLoadBefore = () => {
-    setOffset(moment(offset).subtract(200, "days"));
+    console.log('handle');
+    setOffset(moment(offset).subtract(unit, "days"));
+    if (!init) setUnit(50);
   };
 
   useEffect(() => {
-    const newParams = { ...params };
-    newParams.to = offset.format("YYYY-MM-DD HH:mm:ss");
-    setParams(newParams);
+    // 맨 처음 load가 아닐 떄
+    if (!init) {
+      const newParams = { ...params };
+      newParams.to = offset.format("YYYY-MM-DD HH:mm:ss");
+      newParams.count = 50;
+      setParams(newParams);
+    }
   }, [offset]);
 
   useEffect(() => {
-    const newParams = { ...params };
-    newParams.market = targetCoin.name;
-    setParams(newParams);
+    setInit(false);
+    fetchDayCandleData();
+  }, []);
+
+  useEffect(() => {
     
-  } ,[targetCoin])
+    // setInit(true);
+    // setUnit(50);
+    setCandleData(undefined);
+    const newParams = {...params};
+    newParams.market = targetCoin.name;
+    newParams.count = 200;
+    newParams.to = moment().format("YYYY-MM-DD HH:mm:ss");
+    setParams(newParams);
+
+  }, [targetCoin]);
 
   useEffect(() => {
     console.log(params);
-    setTimeout(() => fetchDayCandleData(), 2000);
-    
+    fetchDayCandleData();
+    // if (init) setInit(false);
+    // setTimeout(() => fetchDayCandleData(), 2000);
   }, [params]);
 
   const {
@@ -97,7 +113,8 @@ const PriceChartContainer = () => {
   useEffect(() => {
     if (dayCandleData) {
 
-      console.log(dayCandleData)
+      console.log(dayCandleData);
+      
       // 기존 꺼 복사
       let newCandleData: CandlePriceInfo[];
       candleData ? (newCandleData = [...candleData]) : (newCandleData = []);
@@ -120,11 +137,11 @@ const PriceChartContainer = () => {
     }
   }, [dayCandleData]);
 
+
   const Contents = () => {
     if (candleData)
       return (
         <>
-          {/* <button onClick={handleLoadBefore}>load</button> */}
           <PriceChart
             candleData={candleData}
             onHandleLoadBefore={handleLoadBefore}
