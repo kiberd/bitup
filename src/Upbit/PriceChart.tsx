@@ -33,7 +33,7 @@ import { initialData } from "../data";
 
 interface PriceChartProps {
   candleData: CandlePriceInfo[];
-  onHandleLoadBefore: any
+  onHandleLoadBefore: any;
 }
 
 interface CandlePriceInfo {
@@ -147,7 +147,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData, onHandleLoadBefore 
     if (contanerRef && contanerRef.current) {
       const sizeObj = {
         width: contanerRef.current.offsetWidth * 0.95,
-        height: contanerRef.current.offsetHeight * 0.9,
+        height: contanerRef.current.offsetHeight * 1,
       };
 
       setSize(sizeObj);
@@ -161,7 +161,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ candleData, onHandleLoadBefore 
   return (
     <div
       ref={contanerRef}
-      className="flex items-center justify-center w-full h-5/6"
+      className="flex items-center justify-center w-full h-[75%] mt-8 p-2"
     >
       {size ? (
         <ChartCanvas

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
+import PriceChartSetting from "./PriceChartSetting";
 import PriceChart from "./PriceChart";
 
 import { initialData } from "../data";
@@ -18,7 +19,6 @@ import {
   getCandleInfoByMonth,
   getCandleInfoByWeek,
 } from "../api/api";
-import { off } from "process";
 
 const parmas = `market="KRW-BTC"&count=1`;
 
@@ -36,65 +36,17 @@ interface CandlePriceInfo {
   volume: number;
 }
 
-const PriceChartContainer = () => {
-  const [init, setInit] = useState<Boolean>();
-  const [unit, setUnit] = useState(200);
+interface PriceChartContainerProps {
+  targetCoin: string;
+}
 
+const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
+  targetCoin,
+}) => {
+  const [init, setInit] = useState<Boolean>(true);
   const [candleData, setCandleData] = useState<CandlePriceInfo[]>();
-
-  const [targetCoin, setTargetCoin] = useRecoilState(selectedCoin);
-
-  const [paramsString, setParamsString] = useState(
-    'market="KRW-BTC"&count=100'
-  );
-
-  const [params, setParams] = useState({
-    market: targetCoin.name,
-    count: 200,
-    to: moment().format("YYYY-MM-DD HH:mm:ss"),
-  });
-  const [offset, setOffset] = useState(moment());
-
-  const handleLoadBefore = () => {
-    console.log('handle');
-    setOffset(moment(offset).subtract(unit, "days"));
-    if (!init) setUnit(50);
-  };
-
-  useEffect(() => {
-    // 맨 처음 load가 아닐 떄
-    if (!init) {
-      const newParams = { ...params };
-      newParams.to = offset.format("YYYY-MM-DD HH:mm:ss");
-      newParams.count = 50;
-      setParams(newParams);
-    }
-  }, [offset]);
-
-  useEffect(() => {
-    setInit(false);
-    fetchDayCandleData();
-  }, []);
-
-  useEffect(() => {
-    
-    // setInit(true);
-    // setUnit(50);
-    setCandleData(undefined);
-    const newParams = {...params};
-    newParams.market = targetCoin.name;
-    newParams.count = 200;
-    newParams.to = moment().format("YYYY-MM-DD HH:mm:ss");
-    setParams(newParams);
-
-  }, [targetCoin]);
-
-  useEffect(() => {
-    console.log(params);
-    fetchDayCandleData();
-    // if (init) setInit(false);
-    // setTimeout(() => fetchDayCandleData(), 2000);
-  }, [params]);
+  const [params, setParams] = useState<any>();
+  const [offset, setOffset] = useState<any>();
 
   const {
     isLoading,
@@ -103,7 +55,7 @@ const PriceChartContainer = () => {
     refetch: fetchDayCandleData,
   } = useQuery(
     ["getDayCandle", params],
-    () => getCandleInfoByDay(getAuthToken(paramsString), params),
+    () => getCandleInfoByDay(getAuthToken("paramsString"), params),
     {
       enabled: true,
       cacheTime: 0,
@@ -111,13 +63,39 @@ const PriceChartContainer = () => {
   );
 
   useEffect(() => {
-    if (dayCandleData) {
+    const initParams = {
+      market: targetCoin,
+      count: 200,
+      to: moment().format("YYYY-MM-DD HH:mm:ss"),
+    };
 
-      console.log(dayCandleData);
-      
+    setInit(true);
+    setParams(initParams);
+    setOffset(moment().subtract(200, "days"));
+  }, [targetCoin]);
+
+  const handleLoadBefore = () => {
+    const newParams = {
+      market: targetCoin,
+      count: 50,
+      to: moment(offset).format("YYYY-MM-DD HH:mm:ss"),
+    };
+
+    setInit(false);
+    setParams(newParams);
+    setOffset(moment(offset).subtract(50, "days"));
+  };
+
+  useEffect(() => {
+    if (dayCandleData) {
       // 기존 꺼 복사
-      let newCandleData: CandlePriceInfo[];
-      candleData ? (newCandleData = [...candleData]) : (newCandleData = []);
+      let newCandleData: CandlePriceInfo[] = [];
+
+      if (init) {
+        newCandleData = [];
+      } else {
+        if (candleData) newCandleData = [...candleData];
+      }
 
       // 새로운 값 추가
       dayCandleData.map((data: any) => {
@@ -137,21 +115,22 @@ const PriceChartContainer = () => {
     }
   }, [dayCandleData]);
 
+  if (isError) return <div>error</div>;
+  if (isLoading) return <div>loading</div>;
 
-  const Contents = () => {
-    if (candleData)
-      return (
-        <>
-          <PriceChart
-            candleData={candleData}
-            onHandleLoadBefore={handleLoadBefore}
-          />
-        </>
-      );
-    return null;
-  };
+  if (candleData)
+    return (
+      <>
 
-  return Contents();
+        <PriceChartSetting />
+        <PriceChart
+          candleData={candleData}
+          onHandleLoadBefore={handleLoadBefore}
+        />
+      </>
+    );
+
+  return null;
 };
 
 export default PriceChartContainer;

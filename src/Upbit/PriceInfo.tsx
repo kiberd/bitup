@@ -161,10 +161,10 @@ const PriceInfo = () => {
   const [isInfo, setIsInfo] = useState(false);
 
   return (
-    <div className="flex w-full h-1/6 justify-center items-center">
-      <div className="w-full h-full border border-black-600 rounded-md mr-5 ml-5 mt-8">
-        <div className="flex flex-row h-1/3 border-b">
-          <div className="ml-4 mr-4 mt-3 mb-3">
+    <div className="flex items-center justify-center w-full h-[20%]">
+      <div className="w-full h-full mt-8 ml-5 mr-5 border rounded-md border-black-600">
+        <div className="flex flex-row border-b h-1/3">
+          <div className="mt-3 mb-3 ml-4 mr-4">
             <span
               className="input-group-text flex items-center px-1 py-1.5 text-base font-normal text-gray-700 text-center whitespace-nowrap rounded"
               id="basic-addon2"
@@ -181,7 +181,7 @@ const PriceInfo = () => {
           ) : null}
 
           {/* 시세 정보 아이콘 */}
-          <div className="flex flex-row ml-auto w-2/6">
+          <div className="flex flex-row w-2/6 ml-auto">
             <div
               className={`w-2/5 text-center mt-3.5 cursor-pointer ${
                 !isInfo ? "border-b-4 border-indigo-500 text-indigo-500" : null
@@ -198,7 +198,7 @@ const PriceInfo = () => {
             >
               정보
             </div>
-            <div className="flex justify-center items-center w-1/5 border-l">
+            <div className="flex items-center justify-center w-1/5 border-l">
               <div>
                 <span
                   className="input-group-text flex items-center px-1 py-1.5 text-base font-normal text-gray-700 text-center whitespace-nowrap rounded"
