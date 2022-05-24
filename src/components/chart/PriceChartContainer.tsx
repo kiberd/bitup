@@ -18,6 +18,7 @@ import {
   getCandleInfoByDay,
   getCandleInfoByWeek,
   getCandleInfoByMonth,
+  getCandleData,
 } from "../../api/api";
 
 const parmas = `market="KRW-BTC"&count=1`;
@@ -43,17 +44,17 @@ interface PriceChartContainerProps {
 const periodUnitList = {
   day: {
     unit: "days",
-    endpoint: "v1/candles/days"
+    endpoint: "v1/candles/days",
   },
   week: {
     unit: "weeks",
-    endpoint: "v1/candles/weeks"
+    endpoint: "v1/candles/weeks",
   },
   month: {
     unit: "months",
-    endpoint: "v1/candles/months"
-  }
-}
+    endpoint: "v1/candles/months",
+  },
+};
 
 const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   targetCoin,
@@ -62,30 +63,24 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   const [candleData, setCandleData] = useState<CandlePriceInfo[]>();
   const [offset, setOffset] = useState<any>();
 
-  const [period, setPeriod] = useState<any>({
-    unit: "days",
-    endpoint: "v1/candles/days"
-  });
+  const [period, setPeriod] = useState<any>("days");
+  const [endPoint, setEndPoint] = useState("v1/candles/days");
   const [apiParams, setApiParams] = useRecoilState(paramsState);
 
-  const handlePeriod = (value: any) => {
-    
-    const newPeriod = {
-      unit: periodUnitList[value as keyof Object]["unit" as keyof Object],
-      encpoint: periodUnitList[value as keyof Object]["endpoint" as keyof Object]
-    };
-
-    setPeriod(newPeriod);
+  const handleEndPoint = (value: any) => {
+    setPeriod(value);
+    typeof value === "string"
+      ? setEndPoint("v1/candles/" + value)
+      : setEndPoint("v1/candles/minutes/" + value);
   };
 
   const {
     isLoading,
     isError,
-    data: dayCandleData,
-    refetch: fetchDayCandleData,
+    data: fetchCandleData,
   } = useQuery(
-    ["getDayCandle", apiParams],
-    () => getCandleInfoByDay(getAuthToken("paramsString"), apiParams),
+    [targetCoin + " " + endPoint, apiParams, endPoint],
+    () => getCandleData(getAuthToken("paramsString"), endPoint, apiParams),
     {
       enabled: true,
       cacheTime: 0,
@@ -93,11 +88,18 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   );
 
   useEffect(() => {
-    
+    const initParams = {
+      market: targetCoin,
+      count: 200,
+      to: moment().format("YYYY-MM-DD HH:mm:ss"),
+    };
+
     setInit(true);
+    setApiParams(initParams);
     setOffset(moment().subtract(200, "days"));
   }, [targetCoin]);
 
+  // 기간에 따른 handling 필요
   const handleLoadBefore = () => {
     const newParams = {
       market: targetCoin,
@@ -107,11 +109,20 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
 
     setInit(false);
     setApiParams(newParams);
-    setOffset(moment(offset).subtract(50, "days"));
+
+    if (period && typeof period === "string") {
+      if (period === "days") setOffset(moment(offset).subtract(50, "days"));
+      if (period === "weeks") setOffset(moment(offset).subtract(50, "weeks"));
+      if (period === "months") setOffset(moment(offset).subtract(50, "months"));
+    } else {
+      const unit = 50 * period;
+      setOffset(moment(offset).subtract(unit, "minutes"));
+    }
+    // setOffset(moment(offset).subtract(50, "days"));
   };
 
   useEffect(() => {
-    if (dayCandleData) {
+    if (fetchCandleData) {
       // 기존 꺼 복사
       let newCandleData: CandlePriceInfo[] = [];
 
@@ -122,7 +133,7 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
       }
 
       // 새로운 값 추가
-      dayCandleData.map((data: any) => {
+      fetchCandleData.map((data: any) => {
         const filterCandleDataObj: CandlePriceInfo = {
           date: data.candle_date_time_utc,
           open: data.opening_price,
@@ -137,20 +148,23 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
 
       setCandleData(newCandleData);
     }
-  }, [dayCandleData]);
+  }, [fetchCandleData]);
 
-  if (isError) return <div>error</div>;
-  if (isLoading) return <div>loading</div>;
+  // if (isError) return <div>error</div>;
+  // if (isLoading) return <div>loading</div>;
 
   if (candleData)
     return (
       <>
-
-        <PriceChartSetting />
-        <PriceChart
-          candleData={candleData}
-          onHandleLoadBefore={handleLoadBefore}
-        />
+        <PriceChartSetting onHandleEndPoint={handleEndPoint} />
+        {isLoading ? (
+          <div>loading</div>
+        ) : (
+          <PriceChart
+            candleData={candleData}
+            onHandleLoadBefore={handleLoadBefore}
+          />
+        )}
       </>
     );
 

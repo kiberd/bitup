@@ -7,246 +7,40 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/solid";
 
-import ExternalCoinPriceBox from "./ExternalCoinPriceBox";
+import ExternalCoinPriceBox from "../ExternalCoinPriceBox";
+
+import { useRecoilState } from "recoil";
+import { periodUnitState } from "../../recoil/coin/atom";
 
 const unit = [
-  { name: "1일" },
-  { name: "1주" },
-  { name: "한달" },
-  { name: "1분" },
-  { name: "3분" },
-  { name: "5분" },
-  { name: "10분" },
-  { name: "15분" },
-  { name: "30분" },
-  { name: "1시간" },
-  { name: "4시간" },
+  { name: "1일", value: "days" },
+  { name: "1주", value: "weeks" },
+  { name: "한달", value: "months" },
+  { name: "1분", value: 1 },
+  { name: "3분", value: 3 },
+  { name: "5분", value: 5 },
+  { name: "10분", value: 10 },
+  { name: "15분", value: 15 },
+  { name: "30분", value: 30 },
+  { name: "1시간", value: 60 },
+  { name: "4시간", value: 240 },
 ];
 
-function EditInactiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  );
+interface PriceChartSettingProps{
+  onHandleEndPoint: any
 }
 
-function EditActiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 13V16H7L16 7L13 4L4 13Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
 
-function DuplicateInactiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
+const PriceChartSetting: React.FC<PriceChartSettingProps> = ({ onHandleEndPoint }) => {
+  
+  // const [selected, setSelected] = useState(unit[0]);
+  const [selected, setSelected] = useRecoilState(periodUnitState);
 
-function DuplicateActiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 4H12V12H4V4Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path
-        d="M8 8H16V16H8V8Z"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
+  const handleSelected = (e: any) => {
+    setSelected(e);
+    onHandleEndPoint(e.value);
+  }
 
-function ArchiveInactiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function ArchiveActiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="8"
-        width="10"
-        height="8"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <rect
-        x="4"
-        y="4"
-        width="12"
-        height="4"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M8 12H12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function MoveInactiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function MoveActiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 4H16V10" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M16 4L8 12" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6H4V16H14V12" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function DeleteInactiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#EDE9FE"
-        stroke="#A78BFA"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#A78BFA" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#A78BFA" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function DeleteActiveIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="5"
-        y="6"
-        width="10"
-        height="10"
-        fill="#8B5CF6"
-        stroke="#C4B5FD"
-        strokeWidth="2"
-      />
-      <path d="M3 6H17" stroke="#C4B5FD" strokeWidth="2" />
-      <path d="M8 6V4H12V6" stroke="#C4B5FD" strokeWidth="2" />
-    </svg>
-  );
-}
-
-const PriceChartSetting = () => {
-  const [selected, setSelected] = useState(unit[0]);
 
   return (
     <div className="flex items-center justify-center w-full h-[5%] mt-2">
@@ -255,7 +49,7 @@ const PriceChartSetting = () => {
 
 
           <div className="z-10 w-36">
-            <Listbox value={selected} onChange={setSelected}>
+            <Listbox value={selected} onChange={(e) => handleSelected(e)}>
               <div className="relative mt-3">
                 <Listbox.Button className="relative w-full pl-3 pr-10 text-left bg-white cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="justify-center block text-center">
@@ -276,9 +70,9 @@ const PriceChartSetting = () => {
                   leaveTo="opacity-0"
                 >
                   <Listbox.Options className="absolute w-full py-2 mt-3 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    {unit.map((person, personIdx) => (
+                    {unit.map((person, index) => (
                       <Listbox.Option
-                        key={personIdx}
+                        key={index}
                         className={({ active }) =>
                           `relative cursor-default select-none py-2 pr-4 ${
                             active
@@ -293,7 +87,7 @@ const PriceChartSetting = () => {
                             <span
                               className={`block truncate text-center ${
                                 selected ? "font-medium" : "font-normal"
-                              }`}
+                              } `}
                             >
                               {person.name}
                             </span>
@@ -308,6 +102,7 @@ const PriceChartSetting = () => {
                           </>
                         )}
                       </Listbox.Option>
+                      
                     ))}
                   </Listbox.Options>
                 </Transition>

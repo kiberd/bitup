@@ -53,3 +53,14 @@ export const getCandleInfoByMonth = async (token: any, params: any) => {
 
   return data;
 };
+
+export const getCandleData =async (token: any, endPoint: string, params: any) => {
+
+  const { data } = await axios.get(endPoint, {
+    params: params,
+  });
+
+  return data;
+  
+}
+

@@ -4,8 +4,8 @@ import moment from "moment";
 export const selectedCoin = atom({
   key: "selectedCoin",
   default: {
-    name: "KRW-BTC"
-  }
+    name: "KRW-BTC",
+  },
 });
 
 export const coinListState = atom({
@@ -56,8 +56,16 @@ export const coinListState = atom({
 export const paramsState = atom({
   key: "paramsState",
   default: {
-      market: "KRW-BTC",
-      count: 200,
-      to: moment().format("YYYY-MM-DD HH:mm:ss"),
-  }
-})
+    market: "KRW-BTC",
+    count: 200,
+    to: moment().format("YYYY-MM-DD HH:mm:ss"),
+  },
+});
+
+export const periodUnitState = atom({
+  key: "periodUnitState",
+  default: {
+    name: "1일",
+    value: "days",
+  },
+});
