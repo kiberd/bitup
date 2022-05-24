@@ -29,7 +29,7 @@ import {
   LineSeriesProps,
 } from "react-financial-charts";
 
-import { initialData } from "../data";
+import { initialData } from "../../data";
 
 interface PriceChartProps {
   candleData: CandlePriceInfo[];

@@ -4,21 +4,21 @@ import { useQuery } from "react-query";
 import PriceChartSetting from "./PriceChartSetting";
 import PriceChart from "./PriceChart";
 
-import { initialData } from "../data";
+import { initialData } from "../../data";
 
-import { getAuthToken } from "../api/request";
+import { getAuthToken } from "../../api/request";
 
 import { useRecoilState } from "recoil";
-import { selectedCoin } from "../recoil/coin/atom";
+import { selectedCoin, paramsState } from "../../recoil/coin/atom";
 
 import moment from "moment";
 
 import {
   getCandleInfoByMin,
   getCandleInfoByDay,
-  getCandleInfoByMonth,
   getCandleInfoByWeek,
-} from "../api/api";
+  getCandleInfoByMonth,
+} from "../../api/api";
 
 const parmas = `market="KRW-BTC"&count=1`;
 
@@ -40,13 +40,43 @@ interface PriceChartContainerProps {
   targetCoin: string;
 }
 
+const periodUnitList = {
+  day: {
+    unit: "days",
+    endpoint: "v1/candles/days"
+  },
+  week: {
+    unit: "weeks",
+    endpoint: "v1/candles/weeks"
+  },
+  month: {
+    unit: "months",
+    endpoint: "v1/candles/months"
+  }
+}
+
 const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   targetCoin,
 }) => {
   const [init, setInit] = useState<Boolean>(true);
   const [candleData, setCandleData] = useState<CandlePriceInfo[]>();
-  const [params, setParams] = useState<any>();
   const [offset, setOffset] = useState<any>();
+
+  const [period, setPeriod] = useState<any>({
+    unit: "days",
+    endpoint: "v1/candles/days"
+  });
+  const [apiParams, setApiParams] = useRecoilState(paramsState);
+
+  const handlePeriod = (value: any) => {
+    
+    const newPeriod = {
+      unit: periodUnitList[value as keyof Object]["unit" as keyof Object],
+      encpoint: periodUnitList[value as keyof Object]["endpoint" as keyof Object]
+    };
+
+    setPeriod(newPeriod);
+  };
 
   const {
     isLoading,
@@ -54,8 +84,8 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     data: dayCandleData,
     refetch: fetchDayCandleData,
   } = useQuery(
-    ["getDayCandle", params],
-    () => getCandleInfoByDay(getAuthToken("paramsString"), params),
+    ["getDayCandle", apiParams],
+    () => getCandleInfoByDay(getAuthToken("paramsString"), apiParams),
     {
       enabled: true,
       cacheTime: 0,
@@ -63,14 +93,8 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   );
 
   useEffect(() => {
-    const initParams = {
-      market: targetCoin,
-      count: 200,
-      to: moment().format("YYYY-MM-DD HH:mm:ss"),
-    };
-
+    
     setInit(true);
-    setParams(initParams);
     setOffset(moment().subtract(200, "days"));
   }, [targetCoin]);
 
@@ -82,7 +106,7 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     };
 
     setInit(false);
-    setParams(newParams);
+    setApiParams(newParams);
     setOffset(moment(offset).subtract(50, "days"));
   };
 

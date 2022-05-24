@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
-import Header from "./Upbit/Header";
+import Header from "./components/Header";
 
-import PriceContainer from "./Upbit/PriceContainer";
-import PriceChartContainer from "./Upbit/PriceChartContainer";
-import PriceChart from "./Upbit/PriceChart";
-import PriceSearch from "./Upbit/PriceSearch";
-import PriceTable from "./Upbit/PriceTable";
-import PriceInfo from "./Upbit/PriceInfo";
+import PriceContainer from "./components/chart/PriceContainer";
+import PriceChartContainer from "./components/chart/PriceChartContainer";
+import PriceChart from "./components/chart/PriceChart";
+import PriceSearch from "./components/PriceSearch";
+import PriceTable from "./components/PriceTable";
+import PriceInfo from "./components/PriceInfo";
 
 import { useRecoilState } from "recoil";
 import { selectedCoin } from "./recoil/coin/atom";

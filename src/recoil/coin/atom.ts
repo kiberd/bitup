@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import moment from "moment";
 
 export const selectedCoin = atom({
   key: "selectedCoin",
@@ -51,3 +52,12 @@ export const coinListState = atom({
     selectedCoin: "KRW-BTC",
   },
 });
+
+export const paramsState = atom({
+  key: "paramsState",
+  default: {
+      market: "KRW-BTC",
+      count: 200,
+      to: moment().format("YYYY-MM-DD HH:mm:ss"),
+  }
+})

@@ -3,10 +3,10 @@ import { IMessageEvent, w3cwebsocket } from "websocket";
 
 import { useRecoilValue, useRecoilState } from "recoil";
 
-import { coinListState } from "../recoil/coin/atom";
+import { coinListState } from "../../recoil/coin/atom";
 
-import PriceSearch from "./PriceSearch";
-import PriceTable from "./PriceTable";
+import PriceSearch from "./../PriceSearch";
+import PriceTable from "./../PriceTable";
 
 interface PriceInfo {
   code: string;
@@ -224,12 +224,12 @@ const PriceContainer = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-full h-full">
+    <div className="flex flex-col h-full min-h-full">
       <div className="h-1/6">
         <PriceSearch onHandleSearchKeyword={handleSearchKeyword} />
 
-        <nav className="py-3 px-6 text-sm font-small">
-          <ul className="flex justify-items-center space-x-3">
+        <nav className="px-6 py-3 text-sm font-small">
+          <ul className="flex space-x-3 justify-items-center">
             <li className="basis-1/2">
               <a
                 onClick={() => handleClickCategory(coinList.entireCoinList)}
