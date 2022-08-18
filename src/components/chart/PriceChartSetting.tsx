@@ -26,31 +26,86 @@ const unit = [
   { name: "4시간", value: 240 },
 ];
 
-interface PriceChartSettingProps{
-  onHandleEndPoint: any
+interface PriceChartSettingProps {
+  onHandleEndPoint: any;
 }
 
-
-const PriceChartSetting: React.FC<PriceChartSettingProps> = ({ onHandleEndPoint }) => {
-  
+const PriceChartSetting: React.FC<PriceChartSettingProps> = ({
+  onHandleEndPoint,
+}) => {
   // const [selected, setSelected] = useState(unit[0]);
   const [selected, setSelected] = useRecoilState(periodUnitState);
 
   const handleSelected = (e: any) => {
     setSelected(e);
     onHandleEndPoint(e.value);
-  }
-
+  };
 
   return (
     <div className="flex items-center justify-center w-full h-[5%] mt-2">
       <div className="w-full h-full mt-8 ml-5 mr-5">
-        <div className="flex border rounded-md gray-200">
+        <div className="flex">
+          <div className="z-10 w-20">
+            <div className="w-48">
+              <Listbox value={selected} onChange={(e) => handleSelected(e)}>
+                <div className="relative mt-1 border-gray-600 rounded-md">
+                  <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left rounded-lg shadow-md cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                    <span className="block truncate">{selected.name}</span>
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                      <SelectorIcon
+                        className="w-5 h-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      {unit.map((person, personIdx) => (
+                        <Listbox.Option
+                          key={personIdx}
+                          className={({ active }) =>
+                            `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                              active
+                                ? "bg-amber-100 text-amber-900"
+                                : "text-gray-900"
+                            }`
+                          }
+                          value={person}
+                        >
+                          {({ selected }) => (
+                            <>
+                              <span
+                                className={`block truncate ${
+                                  selected ? "font-medium" : "font-normal"
+                                }`}
+                              >
+                                {person.name}
+                              </span>
+                              {selected ? (
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                  <CheckIcon
+                                    className="w-5 h-5"
+                                    aria-hidden="true"
+                                  />
+                                </span>
+                              ) : null}
+                            </>
+                          )}
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
 
-
-          <div className="z-10 w-36">
-            <Listbox value={selected} onChange={(e) => handleSelected(e)}>
-              <div className="relative mt-3">
+            {/* <Listbox value={selected} onChange={(e) => handleSelected(e)}>
+              <div className="relative">
                 <Listbox.Button className="relative w-full pl-3 pr-10 text-left bg-white cursor-pointer focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                   <span className="justify-center block text-center">
                     {selected.name}
@@ -107,10 +162,10 @@ const PriceChartSetting: React.FC<PriceChartSettingProps> = ({ onHandleEndPoint 
                   </Listbox.Options>
                 </Transition>
               </div>
-            </Listbox>
+            </Listbox> */}
           </div>
 
-          <div className="my-[0.2rem] py-[0.7rem] border-r"/> 
+          {/* <div className="my-[0.2rem] py-[0.7rem] border-r"/> 
 
           <div className="z-10 w-36 mt-[0.45rem]">
             <Menu as="div" className="relative">
@@ -311,9 +366,7 @@ const PriceChartSetting: React.FC<PriceChartSettingProps> = ({ onHandleEndPoint 
 
           <div className="my-[0.2rem] py-[0.7rem] border-r"/> 
 
-          <ExternalCoinPriceBox />
-
-
+          <ExternalCoinPriceBox /> */}
         </div>
       </div>
     </div>

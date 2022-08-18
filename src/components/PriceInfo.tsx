@@ -4,6 +4,8 @@ import { IMessageEvent, w3cwebsocket } from "websocket";
 import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
 import { coinListState } from "../recoil/coin/atom";
 
+import { CurrencyDollarIcon } from "@heroicons/react/outline";
+
 import CoinPrice from "./CoinPrice";
 import CoinInfo from "./CoinInfo";
 
@@ -164,13 +166,8 @@ const PriceInfo = () => {
     <div className="flex items-center justify-center w-full h-[20%]">
       <div className="w-full h-full mt-8 ml-5 mr-5 border rounded-md border-black-600">
         <div className="flex flex-row border-b h-1/3">
-          <div className="mt-3 mb-3 ml-4 mr-4">
-            <span
-              className="input-group-text flex items-center px-1 py-1.5 text-base font-normal text-gray-700 text-center whitespace-nowrap rounded"
-              id="basic-addon2"
-            >
-              로고
-            </span>
+          <div className="mt-4 mb-3 ml-4 mr-4">
+           <CurrencyDollarIcon className="w-6 h-6" /> 
           </div>
 
           {/* 아이콘 */}
@@ -182,7 +179,7 @@ const PriceInfo = () => {
 
           {/* 시세 정보 아이콘 */}
           <div className="flex flex-row w-2/6 ml-auto">
-            <div
+            {/* <div
               className={`w-2/5 text-center mt-3.5 cursor-pointer ${
                 !isInfo ? "border-b-4 border-indigo-500 text-indigo-500" : null
               }`}
@@ -197,8 +194,8 @@ const PriceInfo = () => {
               onClick={() => setIsInfo(!isInfo)}
             >
               정보
-            </div>
-            <div className="flex items-center justify-center w-1/5 border-l">
+            </div> */}
+            {/* <div className="flex items-center justify-center w-1/5 border-l">
               <div>
                 <span
                   className="input-group-text flex items-center px-1 py-1.5 text-base font-normal text-gray-700 text-center whitespace-nowrap rounded"
@@ -221,7 +218,8 @@ const PriceInfo = () => {
                   </svg>
                 </span>
               </div>
-            </div>
+            </div> */}
+
           </div>
         </div>
 

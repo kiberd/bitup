@@ -19,7 +19,7 @@ const CoinPrice: React.FC<CoinPriceProps> = ({ priceInfo }) => {
     <div className="flex flex-row h-2/3">
       {/* 실시간 가격 */}
 
-      <div className="flex justify-center items-center">
+      <div className="flex items-center justify-center">
         <div className="ml-5">
           <span className="block">
             <strong className="text-4xl">
@@ -41,19 +41,19 @@ const CoinPrice: React.FC<CoinPriceProps> = ({ priceInfo }) => {
         </div>
       </div>
 
-      <div className="flex flex-row ml-auto w-1/2 h-full">
+      <div className="flex flex-row w-1/2 h-full ml-auto">
         <div className="flex flex-row w-1/2 mr-3">
           <div className="flex flex-col w-full h-full">
-            <div className="flex flex-row h-1/2 items-center border-b">
-              <div className="text-sm">고가</div>
-              <div className="text-sm ml-auto">
+            <div className="flex flex-row items-center border-b h-1/2">
+              <div className="text-sm font-bold">고가</div>
+              <div className="ml-auto text-sm text-gray-600">
                 {priceInfo.highPrice.toLocaleString()}
               </div>
             </div>
 
-            <div className="flex flex-row h-1/2 items-center">
-              <div className="text-sm">저가</div>
-              <div className="text-sm ml-auto">
+            <div className="flex flex-row items-center h-1/2">
+              <div className="text-sm font-bold">저가</div>
+              <div className="ml-auto text-sm text-gray-600">
                 {priceInfo.lowPrice.toLocaleString()}
               </div>
             </div>
@@ -62,16 +62,16 @@ const CoinPrice: React.FC<CoinPriceProps> = ({ priceInfo }) => {
 
         <div className="flex flex-row w-1/2 mr-3">
           <div className="flex flex-col w-full h-full">
-            <div className="flex flex-row h-1/2 items-center border-b">
-              <div className="text-sm">거래대금(24h)</div>
-              <div className="text-sm ml-auto">
+            <div className="flex flex-row items-center border-b h-1/2">
+              <div className="text-sm font-bold">거래대금(24h)</div>
+              <div className="ml-auto text-sm text-gray-600">
                 {Math.floor(priceInfo.tradeVolume).toLocaleString()}
               </div>
             </div>
 
-            <div className="flex flex-row h-1/2 items-center">
-              <div className="text-sm">거래량(24h)</div>
-              <div className=" ml-auto">
+            <div className="flex flex-row items-center h-1/2">
+              <div className="text-sm font-bold">거래량(24h)</div>
+              <div className="ml-auto text-gray-600 ">
                 {priceInfo.tradePrice.toLocaleString()}
               </div>
             </div>

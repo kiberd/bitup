@@ -181,5 +181,10 @@
       "react-app"
     ]
   },
-  "proxy": "https://api.upbit.com/"
+  "proxy": "https://api.upbit.com/",
+  
+  "browser": {
+    "crypto": false
+  }
+
 }

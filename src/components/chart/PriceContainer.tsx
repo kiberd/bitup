@@ -113,6 +113,7 @@ const PriceContainer = () => {
 
     // Set inital price info map
     const priceInfoArry: PriceInfo[] = [];
+    
     coinList.entireCoinList.map((code) => {
       const priceInfoObj: PriceInfo = {
         code: code,

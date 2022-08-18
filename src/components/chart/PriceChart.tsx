@@ -46,6 +46,7 @@ interface CandlePriceInfo {
 }
 
 const PriceChart: React.FC<PriceChartProps> = ({ candleData, onHandleLoadBefore }) => {
+
   const [size, setSize] = useState<any>();
 
   const ScaleProvider =

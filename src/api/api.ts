@@ -1,4 +1,5 @@
 import axios from "axios";
+const crypto = require('crypto');
 
 // https://docs.upbit.com/reference/분minute-캔들-1
 
@@ -54,7 +55,7 @@ export const getCandleInfoByMonth = async (token: any, params: any) => {
   return data;
 };
 
-export const getCandleData =async (token: any, endPoint: string, params: any) => {
+export const getCandleData = async (token: any, endPoint: string, params: any) => {
 
   const { data } = await axios.get(endPoint, {
     params: params,

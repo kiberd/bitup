@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 import PriceChartSetting from "./PriceChartSetting";
@@ -68,7 +68,14 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   const [apiParams, setApiParams] = useRecoilState(paramsState);
 
   const handleEndPoint = (value: any) => {
+    setInit(true);
     setPeriod(value);
+    // moment().subtract(200, value);
+    let unit;
+    if (value === "days") setOffset(moment().subtract(200, "days"));
+    if (value === "weeks") setOffset(moment().subtract(200, "weeks"));
+    if (value === "months") setOffset(moment().subtract(200, "months"));
+
     typeof value === "string"
       ? setEndPoint("v1/candles/" + value)
       : setEndPoint("v1/candles/minutes/" + value);
@@ -83,7 +90,8 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     () => getCandleData(getAuthToken("paramsString"), endPoint, apiParams),
     {
       enabled: true,
-      cacheTime: 0,
+      cacheTime: 1000,
+      refetchInterval: 1000,
     }
   );
 
@@ -111,6 +119,7 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     setApiParams(newParams);
 
     if (period && typeof period === "string") {
+      // console.log(period);
       if (period === "days") setOffset(moment(offset).subtract(50, "days"));
       if (period === "weeks") setOffset(moment(offset).subtract(50, "weeks"));
       if (period === "months") setOffset(moment(offset).subtract(50, "months"));
