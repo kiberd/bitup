@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+      {
+        "source": "/v1/:path*",
+        "destination": "https://api.upbit.com/:path*"
+      },
+      {
+        "source": "/v1/:path*/",
+        "destination": "https://api.upbit.com/:path*/"
+      }
+    ]
+  }
