@@ -182,7 +182,6 @@
     ]
   },
   "proxy": "https://api.upbit.com/",
-  
   "browser": {
     "crypto": false
   }

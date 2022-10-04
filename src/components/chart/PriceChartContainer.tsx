@@ -1,32 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
+import moment from "moment";
 
 import PriceChartSetting from "./PriceChartSetting";
 import PriceChart from "./PriceChart";
 
-import { initialData } from "../../data";
-
 import { getAuthToken } from "../../api/request";
-
 import { useRecoilState } from "recoil";
-import { selectedCoin, paramsState } from "../../recoil/coin/atom";
+import { paramsState } from "../../recoil/coin/atom";
 
-import moment from "moment";
+import { getCandleData } from "../../api/api";
 
-import {
-  getCandleInfoByMin,
-  getCandleInfoByDay,
-  getCandleInfoByWeek,
-  getCandleInfoByMonth,
-  getCandleData,
-} from "../../api/api";
-
-const parmas = `market="KRW-BTC"&count=1`;
-
-const authToken = getAuthToken(parmas);
-
-// getCandleInfoByMin(authToken);
-// getCandleInfoByDay();
 
 interface CandlePriceInfo {
   date: string;
@@ -40,21 +24,6 @@ interface CandlePriceInfo {
 interface PriceChartContainerProps {
   targetCoin: string;
 }
-
-const periodUnitList = {
-  day: {
-    unit: "days",
-    endpoint: "v1/candles/days",
-  },
-  week: {
-    unit: "weeks",
-    endpoint: "v1/candles/weeks",
-  },
-  month: {
-    unit: "months",
-    endpoint: "v1/candles/months",
-  },
-};
 
 const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
   targetCoin,
@@ -119,7 +88,6 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     setApiParams(newParams);
 
     if (period && typeof period === "string") {
-      // console.log(period);
       if (period === "days") setOffset(moment(offset).subtract(50, "days"));
       if (period === "weeks") setOffset(moment(offset).subtract(50, "weeks"));
       if (period === "months") setOffset(moment(offset).subtract(50, "months"));
@@ -127,12 +95,11 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
       const unit = 50 * period;
       setOffset(moment(offset).subtract(unit, "minutes"));
     }
-    // setOffset(moment(offset).subtract(50, "days"));
   };
 
   useEffect(() => {
     if (fetchCandleData) {
-      // 기존 꺼 복사
+      
       let newCandleData: CandlePriceInfo[] = [];
 
       if (init) {
@@ -141,7 +108,6 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
         if (candleData) newCandleData = [...candleData];
       }
 
-      // 새로운 값 추가
       fetchCandleData.map((data: any) => {
         const filterCandleDataObj: CandlePriceInfo = {
           date: data.candle_date_time_utc,
@@ -159,8 +125,8 @@ const PriceChartContainer: React.FC<PriceChartContainerProps> = ({
     }
   }, [fetchCandleData]);
 
-  // if (isError) return <div>error</div>;
-  // if (isLoading) return <div>loading</div>;
+  if (isError) return <div className="flex items-center justify-center w-full h-full">error</div>;
+  if (isLoading) return <div className="flex items-center justify-center w-full h-full">loading</div>;
 
   if (candleData)
     return (
