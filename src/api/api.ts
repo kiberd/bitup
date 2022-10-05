@@ -18,7 +18,7 @@ export const getCandleData = async (token: string, endPoint: string, params: any
   const { data } = await axios.get("/api/getCandleData", {
     headers: { Authorization: token },
     params: {
-      apiParams: params,
+      apiParams: JSON.stringify(params),
       endPoint: endPoint
     },
   });

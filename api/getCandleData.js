@@ -9,6 +9,6 @@ export default async (req, res) => {
 
 
     axios.get(`https://api.upbit.com/` + endPoint, {
-			params: apiParams
+			params: JSON.parse(apiParams)
 		}).then(response => res.send(response.data))
 }
